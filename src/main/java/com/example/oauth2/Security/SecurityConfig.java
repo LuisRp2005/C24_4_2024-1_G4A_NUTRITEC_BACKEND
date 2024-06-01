@@ -37,7 +37,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/**","/login/").permitAll()
+                        .requestMatchers("/api/chat/send", "/**", "/login/").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
@@ -47,8 +47,6 @@ public class SecurityConfig {
                 )
                 .build();
     }
-
-
 
     private AuthenticationSuccessHandler successHandler(String frontendUrl) {
         return new AuthenticationSuccessHandler() {
@@ -61,15 +59,14 @@ public class SecurityConfig {
                 System.out.println("Holas " + email);
 
                 if (userService.userExists(email)) {
-                    response.sendRedirect("http://localhost:3000" + "/home");
+                    response.sendRedirect(frontendUrl + "/home");
                 } else {
                     // Puedes redirigir a otra página o realizar otra acción si el usuario no existe
-                    response.sendRedirect("http://localhost:3000" + "/formulario");
+                    response.sendRedirect(frontendUrl + "/formulario");
                 }
             }
         };
     }
-
 
     private AuthenticationFailureHandler failureHandler(String frontendUrl) {
         return new AuthenticationFailureHandler() {
@@ -77,7 +74,7 @@ public class SecurityConfig {
             public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
                 String email = request.getParameter("correo");
                 System.out.println("Hola " + email);
-                response.sendRedirect("http://localhost:3000" + "/home");
+                response.sendRedirect(frontendUrl + "/home");
             }
         };
     }
@@ -85,10 +82,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000","https://transcendent-starburst-8b45b4.netlify.app"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://transcendent-starburst-8b45b4.netlify.app"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/", configuration);
+        source.registerCorsConfiguration("/**", configuration); // Allow all paths
         return source;
     }
 }
