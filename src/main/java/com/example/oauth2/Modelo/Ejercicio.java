@@ -30,6 +30,8 @@ public class Ejercicio {
     @JoinColumn(name = "id_tipo_imc", referencedColumnName = "id_tipo_imc")
     private TipoIMC tipoImc;
 
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
     public String getNombre() {
         return nombre;

@@ -1,62 +1,46 @@
 package com.example.oauth2.Controllers;
 
-
 import com.example.oauth2.Modelo.AsignacionEjercicio;
-import com.example.oauth2.Repository.AsignacionEjercicioRepository;
-import com.example.oauth2.exception.ResourceNotFoundException;
+import com.example.oauth2.Service.AsignacionEjercicioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/asignacion-ejercicios")
+@CrossOrigin("*")
 public class AsignacionEjercicioController {
 
     @Autowired
-    private AsignacionEjercicioRepository asignacionEjercicioRepository;
+    private AsignacionEjercicioService asignacionEjercicioService;
 
-    @GetMapping("/asignaciones-ejercicio")
-    public List<AsignacionEjercicio> listarTodasLasAsignacionesEjercicio() {
-        return asignacionEjercicioRepository.findAll();
+    @GetMapping
+    public List<AsignacionEjercicio> listarTodasLasAsignaciones() {
+        return asignacionEjercicioService.listarTodasLasAsignaciones();
     }
 
-    @GetMapping("/asignaciones-ejercicio/{id}")
-    public ResponseEntity<AsignacionEjercicio> obtenerAsignacionEjercicioPorId(@PathVariable Integer id) {
-        AsignacionEjercicio asignacionEjercicio = asignacionEjercicioRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("La asignación de ejercicio no existe con id: " + id));
+    @GetMapping("/{id}")
+    public ResponseEntity<AsignacionEjercicio> listarAsignacionPorId(@PathVariable Integer id) {
+        AsignacionEjercicio asignacionEjercicio = asignacionEjercicioService.listarAsignacionPorId(id);
         return ResponseEntity.ok(asignacionEjercicio);
     }
 
-    @PostMapping("/asignaciones-ejercicio")
-    public AsignacionEjercicio crearAsignacionEjercicio(@RequestBody AsignacionEjercicio asignacionEjercicio) {
-        return asignacionEjercicioRepository.save(asignacionEjercicio);
+    @PostMapping
+    public AsignacionEjercicio crearAsignacion(@RequestBody AsignacionEjercicio asignacionEjercicio) {
+        return asignacionEjercicioService.crearAsignacion(asignacionEjercicio);
     }
 
-    @PutMapping("/asignaciones-ejercicio/{id}")
-    public ResponseEntity<AsignacionEjercicio> actualizarAsignacionEjercicio(@PathVariable Integer id, @RequestBody AsignacionEjercicio asignacionEjercicioDetalles) {
-        AsignacionEjercicio asignacionEjercicio = asignacionEjercicioRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("La asignación de ejercicio no existe con id: " + id));
-
-        asignacionEjercicio.setUsuario(asignacionEjercicioDetalles.getUsuario());
-        asignacionEjercicio.setEjercicio(asignacionEjercicioDetalles.getEjercicio());
-        asignacionEjercicio.setFechaHoraAsignacion(asignacionEjercicioDetalles.getFechaHoraAsignacion());
-
-        AsignacionEjercicio asignacionEjercicioActualizada = asignacionEjercicioRepository.save(asignacionEjercicio);
-        return ResponseEntity.ok(asignacionEjercicioActualizada);
+    @PutMapping("/{id}")
+    public ResponseEntity<AsignacionEjercicio> actualizarAsignacion(@PathVariable Integer id, @RequestBody AsignacionEjercicio asignacionEjercicio) {
+        AsignacionEjercicio actualizada = asignacionEjercicioService.actualizarAsignacion(id, asignacionEjercicio);
+        return ResponseEntity.ok(actualizada);
     }
 
-    @DeleteMapping("/asignaciones-ejercicio/{id}")
-    public ResponseEntity<Map<String, Boolean>> eliminarAsignacionEjercicio(@PathVariable Integer id) {
-        AsignacionEjercicio asignacionEjercicio = asignacionEjercicioRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("La asignación de ejercicio no existe con id: " + id));
-
-        asignacionEjercicioRepository.delete(asignacionEjercicio);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("eliminado", Boolean.TRUE);
-        return ResponseEntity.ok(response);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarAsignacion(@PathVariable Integer id) {
+        asignacionEjercicioService.eliminarAsignacion(id);
+        return ResponseEntity.noContent().build();
     }
 }

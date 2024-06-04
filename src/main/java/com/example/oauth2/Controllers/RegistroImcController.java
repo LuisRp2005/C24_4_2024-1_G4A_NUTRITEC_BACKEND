@@ -1,61 +1,46 @@
 package com.example.oauth2.Controllers;
 
 import com.example.oauth2.Modelo.RegistroImc;
-import com.example.oauth2.Repository.RegistroImcRepository;
-import com.example.oauth2.exception.ResourceNotFoundException;
+import com.example.oauth2.Service.RegistroImcService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/registros-imc")
+@CrossOrigin("*")
 public class RegistroImcController {
 
     @Autowired
-    private RegistroImcRepository registroImcRepository;
+    private RegistroImcService registroImcService;
 
-    @GetMapping("/registrosImc")
-    public List<RegistroImc> listarTodosLosRegistrosImc() {
-        return registroImcRepository.findAll();
+    @GetMapping
+    public List<RegistroImc> listarTodosLosRegistros() {
+        return registroImcService.listarTodosLosRegistros();
     }
 
-    @GetMapping("/registrosImc/{id}")
-    public ResponseEntity<RegistroImc> listarRegistroImcPorId(@PathVariable Integer id) {
-        RegistroImc registroImc = registroImcRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("El registro IMC no existe con id : " + id));
+    @GetMapping("/{id}")
+    public ResponseEntity<RegistroImc> listarRegistroPorId(@PathVariable Integer id) {
+        RegistroImc registroImc = registroImcService.listarRegistroPorId(id);
         return ResponseEntity.ok(registroImc);
     }
 
-    @PostMapping("/registrosImc")
-    public RegistroImc crearRegistroImc(@RequestBody RegistroImc registroImc) {
-        return registroImcRepository.save(registroImc);
+    @PostMapping
+    public RegistroImc crearRegistro(@RequestBody RegistroImc registroImc) {
+        return registroImcService.crearRegistro(registroImc);
     }
 
-    @PutMapping("/registrosImc/{id}")
-    public ResponseEntity<RegistroImc> actualizarRegistroImc(@PathVariable Integer id, @RequestBody RegistroImc registroImcRequest) {
-        RegistroImc registroImc = registroImcRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("El registro IMC no existe con id : " + id));
-
-        registroImc.setUsuario(registroImcRequest.getUsuario());
-        registroImc.setTipoImc(registroImcRequest.getTipoImc());
-        registroImc.setFechaHoraRegistro(registroImcRequest.getFechaHoraRegistro());
-
-        RegistroImc registroImcActualizado = registroImcRepository.save(registroImc);
-        return ResponseEntity.ok(registroImcActualizado);
+    @PutMapping("/{id}")
+    public ResponseEntity<RegistroImc> actualizarRegistro(@PathVariable Integer id, @RequestBody RegistroImc registroImc) {
+        RegistroImc actualizado = registroImcService.actualizarRegistro(id, registroImc);
+        return ResponseEntity.ok(actualizado);
     }
 
-    @DeleteMapping("/registrosImc/{id}")
-    public ResponseEntity<Map<String, Boolean>> eliminarRegistroImc(@PathVariable Integer id) {
-        RegistroImc registroImc = registroImcRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("El registro IMC no existe con id : " + id));
-
-        registroImcRepository.delete(registroImc);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("Eliminado", Boolean.TRUE);
-        return ResponseEntity.ok(response);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarRegistro(@PathVariable Integer id) {
+        registroImcService.eliminarRegistro(id);
+        return ResponseEntity.noContent().build();
     }
 }

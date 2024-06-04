@@ -20,7 +20,6 @@ spring:
           google:
             clientId:
             clientSecret:
-
 server:
   port: 8080
 

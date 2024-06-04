@@ -21,9 +21,7 @@ public class Comida {
     @Column(name = "calorias")
     private Integer calorias;
 
-    public Integer getIdComida() {
-        return idComida;
-    }
+    public Integer getIdComida() {return idComida;}
 
     public void setIdComida(Integer idComida) {
         this.idComida = idComida;

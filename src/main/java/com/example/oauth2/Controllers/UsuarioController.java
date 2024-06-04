@@ -27,7 +27,7 @@ public class UsuarioController {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
-    private OAuth2AuthorizedClientService authorizedClientService; // Inyecta OAuth2AuthorizedClientService
+    private OAuth2AuthorizedClientService authorizedClientService;
 
     @GetMapping("/usuario")
     public List<Usuario> listarUsuarios(){
