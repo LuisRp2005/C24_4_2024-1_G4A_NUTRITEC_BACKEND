@@ -30,6 +30,9 @@ public class Ejercicio {
     @JoinColumn(name = "id_tipo_imc", referencedColumnName = "id_tipo_imc")
     private TipoIMC tipoImc;
 
+    @Column(name = "images")
+    private String images;
+
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
@@ -63,5 +66,13 @@ public class Ejercicio {
 
     public void setTipoImc(TipoIMC tipoImc) {
         this.tipoImc = tipoImc;
+    }
+
+    public String getImages() {
+        return images;
+    }
+
+    public void setImages(String images) {
+        this.images = images;
     }
 }

@@ -21,6 +21,9 @@ public class Comida {
     @Column(name = "calorias")
     private Integer calorias;
 
+    @Column(name = "images")
+    private String images;
+
     public Integer getIdComida() {return idComida;}
 
     public void setIdComida(Integer idComida) {
@@ -49,5 +52,13 @@ public class Comida {
 
     public void setCalorias(Integer calorias) {
         this.calorias = calorias;
+    }
+
+    public String getImages() {
+        return images;
+    }
+
+    public void setImages(String images) {
+        this.images = images;
     }
 }
