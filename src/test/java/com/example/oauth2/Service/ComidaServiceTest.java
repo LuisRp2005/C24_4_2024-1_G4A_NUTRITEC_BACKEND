@@ -73,13 +73,13 @@ public class ComidaServiceTest {
         comida.setIdComida(1);
 
         Comida updatedComida = new Comida();
-        updatedComida.setNombreComida("Nuevo Nombre");
+        updatedComida.setNombreComida("Arroz con pollo");
 
         when(comidaRepository.findById(1)).thenReturn(Optional.of(comida));
         when(comidaRepository.save(comida)).thenReturn(comida);
 
         Comida result = comidaService.actualizarComida(1, updatedComida);
-        assertEquals("Nuevo Nombre", result.getNombreComida());
+        assertEquals("Arroz con pollo", result.getNombreComida());
     }
 
     @Test

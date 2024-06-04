@@ -73,13 +73,13 @@ public class EjercicioServiceTest {
         ejercicio.setId(1);
 
         Ejercicio updatedEjercicio = new Ejercicio();
-        updatedEjercicio.setNombre("Nuevo Nombre");
+        updatedEjercicio.setNombre("Flexiones");
 
         when(ejercicioRepository.findById(1)).thenReturn(Optional.of(ejercicio));
         when(ejercicioRepository.save(ejercicio)).thenReturn(ejercicio);
 
         Ejercicio result = ejercicioService.actualizarEjercicio(1, updatedEjercicio);
-        assertEquals("Nuevo Nombre", result.getNombre());
+        assertEquals("Flexiones", result.getNombre());
     }
 
     @Test
