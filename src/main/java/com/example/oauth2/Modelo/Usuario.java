@@ -13,6 +13,8 @@ public class Usuario {
     private Integer idUsuario;
     private String nombre;
     private String apellido;
+    private String contraseña;
+
     private String correo;
     private Double altura;
     private Double peso;
@@ -103,5 +105,12 @@ public class Usuario {
 
     public void setRol(Integer rol) {
         this.rol = rol;
+    }
+
+    public String getContraseña() {
+        return contraseña;
+    }
+    public void setContraseña(String contraseña) {
+        this.contraseña = contraseña;
     }
 }
