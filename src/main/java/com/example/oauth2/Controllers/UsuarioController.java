@@ -83,7 +83,7 @@ public class UsuarioController {
 
     //OBTENER LOS DATOS DE UN USUARIO
     @GetMapping("/datos")
-    public Optional<Usuario> listarUsuarioConectado() {
+    public ResponseEntity<Usuario> listarUsuarioConectado() {
         // OBTENER LA AUTENTICACION ACTUAL
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -99,11 +99,17 @@ public class UsuarioController {
 
             // BUSCAR EL USUARIO POR EL CORREO ELECTRONICO
             Optional<Usuario> usuario = usuarioRepository.findByCorreo(email);
-            return usuario;
+
+            if (usuario.isPresent()) {
+                return ResponseEntity.ok(usuario.get());
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
         }
 
         // NULO SI NO ES OAUTH2
-        return null;
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
+
 
 }

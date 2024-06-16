@@ -2,6 +2,7 @@ package com.example.oauth2.Modelo;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "nut_usuario")
@@ -20,7 +21,7 @@ public class Usuario {
     private Double peso;
 
     @Column(name = "fecha_nacimiento")
-    private LocalDateTime fechaNacimiento;
+    private Date fechaNacimiento;
 
     private String genero;
     private Double imc;
@@ -75,14 +76,6 @@ public class Usuario {
         this.peso = peso;
     }
 
-    public LocalDateTime getFechaNacimiento() {
-        return fechaNacimiento;
-    }
-
-    public void setFechaNacimiento(LocalDateTime fechaNacimiento) {
-        this.fechaNacimiento = fechaNacimiento;
-    }
-
     public String getGenero() {
         return genero;
     }
@@ -112,5 +105,13 @@ public class Usuario {
     }
     public void setContraseña(String contraseña) {
         this.contraseña = contraseña;
+    }
+
+    public Date getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public void setFechaNacimiento(Date fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
     }
 }

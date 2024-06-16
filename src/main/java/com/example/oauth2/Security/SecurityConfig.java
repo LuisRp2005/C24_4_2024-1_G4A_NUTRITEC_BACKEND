@@ -4,6 +4,7 @@ import com.example.oauth2.Service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,7 +52,7 @@ public class SecurityConfig {
     private AuthenticationSuccessHandler successHandler(String frontendUrl) {
         return new AuthenticationSuccessHandler() {
             @Override
-            public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+            public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
                 OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
                 OAuth2User oauth2User = oauthToken.getPrincipal();
 
@@ -61,7 +62,6 @@ public class SecurityConfig {
                 if (userService.userExists(email)) {
                     response.sendRedirect(frontendUrl + "/home");
                 } else {
-                    // Puedes redirigir a otra página o realizar otra acción si el usuario no existe
                     response.sendRedirect(frontendUrl + "/formulario");
                 }
             }
