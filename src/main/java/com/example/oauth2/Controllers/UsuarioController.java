@@ -30,16 +30,16 @@ public class UsuarioController {
     private OAuth2AuthorizedClientService authorizedClientService;
 
     @GetMapping("/usuario")
-    public List<Usuario> listarUsuarios(){
+    public List<Usuario> listarUsuarios() {
         return usuarioRepository.findAll();
     }
 
     @PostMapping("/usuario")
-    public Usuario guardarUsuario(@RequestBody Usuario usuario){
+    public Usuario guardarUsuario(@RequestBody Usuario usuario) {
         return usuarioRepository.save(usuario);
     }
 
-    //OBTENER EL TOKEN DE UN USUARIO
+    // OBTENER EL TOKEN DE UN USUARIO
     @GetMapping("/token")
     public ResponseEntity<Map<String, String>> obtenerTokenYEmail() {
         // OBTENER LA AUTENTICACION ACTUAL
@@ -56,6 +56,7 @@ public class UsuarioController {
 
             // OBTENER LOS ATRIBUTOS DEL USUARIO
             String email = (String) oauth2User.getAttribute("email");
+            String picture = (String) oauth2User.getAttribute("picture");
 
             // OBTENER EL TOKEN DE ACCESO USANDO OAuth2AuthorizedClientService
             OAuth2AccessToken accessToken = authorizedClientService.loadAuthorizedClient(
@@ -63,11 +64,12 @@ public class UsuarioController {
                     oauthToken.getName()
             ).getAccessToken();
 
-            // AGREGAR EL TOKEN Y EL EMAIL
+            // AGREGAR EL TOKEN, EL EMAIL Y LA IMAGEN
             tokenAndEmail.put("token", accessToken.getTokenValue());
             tokenAndEmail.put("email", email);
+            tokenAndEmail.put("picture", picture);
 
-            // DEVOLVER EL TOKEN Y EL EMAIL
+            // DEVOLVER EL TOKEN, EL EMAIL Y LA IMAGEN
             return ResponseEntity.ok(tokenAndEmail);
         }
 
@@ -75,38 +77,52 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-
-    //VERIFICAR QUE EXISTE UN USUARIO POR SU CORREO
+    // VERIFICAR QUE EXISTE UN USUARIO POR SU CORREO
     @GetMapping("/verificar/{correo}")
     public Optional<Usuario> buscarUsuarioPorCorreo(@PathVariable String correo) {
         return usuarioRepository.findByCorreo(correo);
     }
 
-    //OBTENER LOS DATOS DE UN USUARIO
+    // OBTENER LOS DATOS DE UN USUARIO
     @GetMapping("/datos")
-    public ResponseEntity<Usuario> listarUsuarioConectado() {
+    public ResponseEntity<Map<String, String>> listarUsuarioConectado() {
         // OBTENER LA AUTENTICACION ACTUAL
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+        // CREAR UN MAPA PARA ALMACENAR LOS DATOS DEL USUARIO
+        Map<String, String> userData = new HashMap<>();
+
         // VERIFICAR QUE LA AUTENTICACION SEA OAUTH2
         if (authentication instanceof OAuth2AuthenticationToken) {
-
             // OBTENER EL USUARIO AUTENTICADO
             OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
             OAuth2User oauth2User = oauthToken.getPrincipal();
 
-            // OBTENER EL CORREO ELECTRONICO
+            // OBTENER LOS ATRIBUTOS DEL USUARIO
             String email = (String) oauth2User.getAttribute("email");
+            String picture = (String) oauth2User.getAttribute("picture");
 
-            // BUSCAR EL USUARIO POR EL CORREO ELECTRONICO
+            // AGREGAR EL EMAIL Y LA IMAGEN AL MAPA
+            userData.put("email", email);
+            userData.put("picture", picture);
+
+            // BUSCAR EL USUARIO POR EL CORREO ELECTRONICO EN EL REPOSITORIO
             Optional<Usuario> usuario = usuarioRepository.findByCorreo(email);
+            if (usuario.isPresent()) {
+                Usuario user = usuario.get();
+                userData.put("nombre", user.getNombre());
+                userData.put("apellido", user.getApellido());
+                userData.put("altura", String.valueOf(user.getAltura()));
+                userData.put("peso", String.valueOf(user.getPeso()));
+                userData.put("edad", String.valueOf(user.getFechaNacimiento()));
+                userData.put("imc", String.valueOf(user.getImc()));
+            }
 
-            return ResponseEntity.ok(usuario.get());
+            // DEVOLVER LOS DATOS DEL USUARIO
+            return ResponseEntity.ok(userData);
         }
 
         // NULO SI NO ES OAUTH2
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
-
-
 }
