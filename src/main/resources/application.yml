@@ -19,7 +19,8 @@ spring:
         registration:
           google:
             clientId:
-            clientSecret: 
+            clientSecret:
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
 
 server:
   port: 8080

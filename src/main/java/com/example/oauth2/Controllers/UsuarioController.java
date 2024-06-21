@@ -75,6 +75,7 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
+
     //VERIFICAR QUE EXISTE UN USUARIO POR SU CORREO
     @GetMapping("/verificar/{correo}")
     public Optional<Usuario> buscarUsuarioPorCorreo(@PathVariable String correo) {
@@ -100,11 +101,7 @@ public class UsuarioController {
             // BUSCAR EL USUARIO POR EL CORREO ELECTRONICO
             Optional<Usuario> usuario = usuarioRepository.findByCorreo(email);
 
-            if (usuario.isPresent()) {
-                return ResponseEntity.ok(usuario.get());
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
+            return ResponseEntity.ok(usuario.get());
         }
 
         // NULO SI NO ES OAUTH2
