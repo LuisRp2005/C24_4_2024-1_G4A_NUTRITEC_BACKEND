@@ -110,6 +110,7 @@ public class UsuarioController {
             Optional<Usuario> usuario = usuarioRepository.findByCorreo(email);
             if (usuario.isPresent()) {
                 Usuario user = usuario.get();
+                userData.put("IdUsuario", String.valueOf(user.getIdUsuario()));
                 userData.put("nombre", user.getNombre());
                 userData.put("apellido", user.getApellido());
                 userData.put("altura", String.valueOf(user.getAltura()));
