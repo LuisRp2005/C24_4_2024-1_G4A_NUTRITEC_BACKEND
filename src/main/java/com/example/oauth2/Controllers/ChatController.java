@@ -13,6 +13,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +27,7 @@ public class ChatController {
     private String apiKey;
 
     @PostMapping("/send")
-    public ResponseEntity<String> sendMessage(@RequestBody Map<String, String> requestBody) {
+    public ResponseEntity<Map<String, String>> sendMessage(@RequestBody Map<String, String> requestBody) {
         try {
             String message = requestBody.get("message");
             if (message == null || message.isEmpty()) {
@@ -49,7 +51,15 @@ public class ChatController {
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
 
-            return response;
+            // Transform the response to the expected structure
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonResponse = objectMapper.readTree(response.getBody());
+            String content = jsonResponse.get("choices").get(0).get("message").get("content").asText();
+
+            Map<String, String> responseBody = new HashMap<>();
+            responseBody.put("response", content);
+
+            return ResponseEntity.ok(responseBody);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "An error occurred while processing the request", e);

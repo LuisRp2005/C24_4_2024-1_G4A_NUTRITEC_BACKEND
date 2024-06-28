@@ -39,10 +39,8 @@ public class UsuarioController {
         return usuarioRepository.save(usuario);
     }
 
-    // OBTENER EL TOKEN DE UN USUARIO
     @GetMapping("/token")
     public ResponseEntity<Map<String, String>> obtenerTokenYEmail() {
-        // OBTENER LA AUTENTICACION ACTUAL
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         // CREAR UN MAPA PARA ALMACENAR EL TOKEN Y EL EMAIL
@@ -54,11 +52,9 @@ public class UsuarioController {
             OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
             OAuth2User oauth2User = oauthToken.getPrincipal();
 
-            // OBTENER LOS ATRIBUTOS DEL USUARIO
             String email = (String) oauth2User.getAttribute("email");
             String picture = (String) oauth2User.getAttribute("picture");
 
-            // OBTENER EL TOKEN DE ACCESO USANDO OAuth2AuthorizedClientService
             OAuth2AccessToken accessToken = authorizedClientService.loadAuthorizedClient(
                     oauthToken.getAuthorizedClientRegistrationId(),
                     oauthToken.getName()
@@ -73,7 +69,6 @@ public class UsuarioController {
             return ResponseEntity.ok(tokenAndEmail);
         }
 
-        // NULO SI NO ES TIPO OAUTH2
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
@@ -83,18 +78,15 @@ public class UsuarioController {
         return usuarioRepository.findByCorreo(correo);
     }
 
-    // OBTENER LOS DATOS DE UN USUARIO
     @GetMapping("/datos")
     public ResponseEntity<Map<String, String>> listarUsuarioConectado() {
         // OBTENER LA AUTENTICACION ACTUAL
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        // CREAR UN MAPA PARA ALMACENAR LOS DATOS DEL USUARIO
         Map<String, String> userData = new HashMap<>();
 
         // VERIFICAR QUE LA AUTENTICACION SEA OAUTH2
         if (authentication instanceof OAuth2AuthenticationToken) {
-            // OBTENER EL USUARIO AUTENTICADO
             OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
             OAuth2User oauth2User = oauthToken.getPrincipal();
 
@@ -102,7 +94,6 @@ public class UsuarioController {
             String email = (String) oauth2User.getAttribute("email");
             String picture = (String) oauth2User.getAttribute("picture");
 
-            // AGREGAR EL EMAIL Y LA IMAGEN AL MAPA
             userData.put("email", email);
             userData.put("picture", picture);
 
@@ -119,11 +110,11 @@ public class UsuarioController {
                 userData.put("imc", String.valueOf(user.getImc()));
             }
 
-            // DEVOLVER LOS DATOS DEL USUARIO
             return ResponseEntity.ok(userData);
         }
 
-        // NULO SI NO ES OAUTH2
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
+
+
 }

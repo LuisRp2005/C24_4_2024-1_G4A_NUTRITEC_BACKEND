@@ -58,7 +58,6 @@ public class SecurityConfig {
                 OAuth2User oauth2User = oauthToken.getPrincipal();
 
                 String email = (String) oauth2User.getAttribute("email");
-                System.out.println("Holas " + email);
 
                 if (userService.userExists(email)) {
                     response.sendRedirect(frontendUrl + "/home");
@@ -74,7 +73,6 @@ public class SecurityConfig {
             @Override
             public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
                 String email = request.getParameter("correo");
-                System.out.println("Hola " + email);
                 response.sendRedirect(frontendUrl + "/home");
             }
         };
