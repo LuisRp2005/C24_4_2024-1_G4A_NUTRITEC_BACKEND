@@ -23,6 +23,10 @@ public class AsignacionComidaService {
                 .orElseThrow(() -> new ResourceNotFoundException("La asignación de comida no existe con id : " + id));
     }
 
+    public List<AsignacionComida> listarAsignacionesPorUsuario(Integer idUsuario) {
+        return asignacionComidaRepository.findByUsuarioIdUsuario(idUsuario);
+    }
+
     public AsignacionComida crearAsignacion(AsignacionComida asignacionComida) {
         return asignacionComidaRepository.save(asignacionComida);
     }

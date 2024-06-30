@@ -23,6 +23,11 @@ public class AsignacionComidaController {
         return asignacionComidaService.listarTodasLasAsignaciones();
     }
 
+    @GetMapping("/usuario/{idUsuario}")
+    public List<AsignacionComida> listarAsignacionesPorUsuario(@PathVariable Integer idUsuario) {
+        return asignacionComidaService.listarAsignacionesPorUsuario(idUsuario);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<String> listarAsignacionPorId(@PathVariable Integer id) {
         try {

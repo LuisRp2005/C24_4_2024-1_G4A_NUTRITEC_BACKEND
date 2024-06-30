@@ -23,6 +23,10 @@ public class AsignacionEjercicioService {
                 .orElseThrow(() -> new ResourceNotFoundException("La asignación de ejercicio no existe con id : " + id));
     }
 
+    public List<AsignacionEjercicio> listarAsignacionesPorUsuario(Integer idUsuario) {
+        return asignacionEjercicioRepository.findByUsuarioIdUsuario(idUsuario);
+    }
+
     public AsignacionEjercicio crearAsignacion(AsignacionEjercicio asignacionEjercicio) {
         return asignacionEjercicioRepository.save(asignacionEjercicio);
     }

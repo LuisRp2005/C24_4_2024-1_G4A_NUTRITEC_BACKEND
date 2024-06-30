@@ -2,6 +2,7 @@ package com.example.oauth2.Controllers;
 
 import com.example.oauth2.Modelo.AsignacionEjercicio;
 import com.example.oauth2.Service.AsignacionEjercicioService;
+import com.example.oauth2.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,11 @@ public class AsignacionEjercicioController {
     @GetMapping
     public List<AsignacionEjercicio> listarTodasLasAsignaciones() {
         return asignacionEjercicioService.listarTodasLasAsignaciones();
+    }
+
+    @GetMapping("/usuario/{idUsuario}")
+    public List<AsignacionEjercicio> listarAsignacionesPorUsuario(@PathVariable Integer idUsuario) {
+        return asignacionEjercicioService.listarAsignacionesPorUsuario(idUsuario);
     }
 
     @GetMapping("/{id}")
